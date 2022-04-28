@@ -10,18 +10,27 @@ const gravity = 0.7
 
 
 class Sprite {
-  constructor({ position, velocity,color ='red' }) {
+  constructor({ position, velocity, color = 'red',offset }) {
     this.position = position
     this.velocity = velocity
     this.width = 50
     this.height = 150
     this.lastKey
     this.attackBox = {
-      position:this.position,
+      position: {
+        x: this.position.x,
+        y: this.position.y,
+      },
+      offset,
+       
+
+
+      
       width: 100,
       height: 50,
     }
     this.color = color
+    this.isAttacking
 
   }
 
@@ -31,23 +40,38 @@ class Sprite {
     c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
     // Attack Box
-    c.fillStyle ='green'
+    // if(this.isAttacking){
+    c.fillStyle = 'green'
     c.fillRect(
       this.attackBox.position.x,
       this.attackBox.position.y,
       this.attackBox.width,
       this.attackBox.height
-      )
+    )
+    // }
   }
 
   update() {
     this.draw()
+    this.attackBox.position.x = this.position.x + this.attackBox.offset.x
+    this.attackBox.position.y = this.position.y
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
     if (this.position.y + this.height + this.velocity.y >= canvas.height) {
       this.velocity.y = 0
     } else this.velocity.y += gravity
   }
+  attack() {
+
+    this.isAttacking = true
+    setTimeout(() => {
+      this.isAttacking = false
+    }, 100);
+
+  }
+
+
+
 }
 
 
@@ -60,6 +84,10 @@ const player = new Sprite({
   velocity: {
     x: 0,
     y: 0
+  },
+  offset:{
+x: 0,
+y: 0,
   }
 })
 player.draw()
@@ -73,6 +101,10 @@ const enemy = new Sprite({
     x: 0,
     y: 0
   },
+  offset:{
+    x: -50,
+    y: 0,
+      },
   color: 'blue'
 })
 enemy.draw()
@@ -127,11 +159,15 @@ function animate() {
     enemy.velocity.x = 5
   }
 
-// Detect for collission
-if (player.attackBox.position.x + player.attackBox.width >= 
-  enemy.position.x && player.attackBox.position.x <= enemy.position.x + enemy.width){
-  console.log('hit');
-}
+  // Detect for collission
+  if (player.attackBox.position.x + player.attackBox.width >= enemy.position.x &&
+    player.attackBox.position.x <= enemy.position.x + enemy.width &&
+    player.attackBox.position.y + player.attackBox.height >= enemy.position.y
+    && player.attackBox.position.y <= enemy.position.y + enemy.height && player.isAttacking
+  ) {
+    player.isAttacking = false
+    console.log('hit');
+  }
 
 
 
@@ -158,7 +194,9 @@ window.addEventListener('keydown', (event) => {
       keys.w.pressed = true
       player.lastKey = 'w'
       break
-
+    case ' ':
+      player.attack()
+      break
 
     //enemy keys
 
@@ -176,6 +214,8 @@ window.addEventListener('keydown', (event) => {
       keys.ArrowUp.pressed = true
       enemy.lastKey = 'ArrowUp'
       break
+
+
 
   }
   console.log(event.key)
