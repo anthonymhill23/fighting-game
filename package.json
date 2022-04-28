@@ -1,0 +1,23 @@
+{
+  "name": "fighting-game",
+  "version": "1.0.0",
+  "description": "This is my fighting game I made.",
+  "main": "index.js",
+  "devDependencies": {
+    "serve": "13.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "serve ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthonymhill23/fighting-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anthonymhill23/fighting-game/issues"
+  },
+  "homepage": "https://github.com/anthonymhill23/fighting-game#readme"
+}
